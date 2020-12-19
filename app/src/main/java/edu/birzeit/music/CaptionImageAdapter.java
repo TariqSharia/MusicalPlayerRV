@@ -1,7 +1,10 @@
 package edu.birzeit.music;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,11 +19,11 @@ public class CaptionImageAdapter  extends RecyclerView.Adapter<CaptionImageAdapt
     private String[] captions;
     private int[] imageIds;
 
+
     public CaptionImageAdapter(String[] captions, int[] imageIds) {
         this.captions = captions;
         this.imageIds = imageIds;
     }
-
     @Override
     public ViewHolder onCreateViewHolder( ViewGroup parent, int viewType) {
         CardView v = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
@@ -28,16 +31,25 @@ public class CaptionImageAdapter  extends RecyclerView.Adapter<CaptionImageAdapt
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         CardView cardView = holder.cardView;
         ImageView imageView = (ImageView) cardView.findViewById(R.id.image);
         Drawable dr = ContextCompat.getDrawable(cardView.getContext(), imageIds[position]);
-
         imageView.setImageDrawable(dr);
 
         TextView txt = (TextView) cardView.findViewById(R.id.txtName);
         txt.setText(captions[position]);
-
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = holder.cardView.getContext();
+                Intent intent = new Intent(context,Lyrics.class);
+                intent.putExtra("pos",position);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                System.out.println(captions[position]);
+            }
+        });
        // cardView.setOnClickListener((v)   { } );
 
 
